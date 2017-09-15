@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SingleUserTemplate</title>
+    <title><%= yield(:title) %></title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -11,6 +11,7 @@
   <body>
     <%= render 'layouts/header' %>
     <div class='container'>
+      <%= render 'layouts/messages' %>
       <%= yield %>
       <%= render 'layouts/footer' %>
     </div>
