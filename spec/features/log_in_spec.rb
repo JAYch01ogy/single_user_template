@@ -24,18 +24,14 @@ describe 'Log in', feature: true do
     it 'displays log in user home page' do
       expect(page).to have_content('Signed in successfully.')
       expect(page).to have_content('Home')
-      expect(page).to have_content('Edit profile')
       expect(page).to have_content('Logout')
-      expect(page).not_to have_content('Sign up')
       expect(page).not_to have_content('Login')
     end
 
     it 'allows logging out' do
       click_link('Logout')
       expect(page).to have_content('Signed out successfully.')
-      expect(page).not_to have_content('Edit profile')
       expect(page).not_to have_content('Logout')
-      expect(page).to have_content('Sign up')
       expect(page).to have_content('Login')
     end
   end
