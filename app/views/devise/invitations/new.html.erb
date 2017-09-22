@@ -1,0 +1,17 @@
+<% provide(:title, 'Invite User') %>
+<h2>Invite User</h2>
+
+<div class='row'>
+  <div class='col-md-6 col-md-offset-3'>
+    <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
+      <% resource.class.invite_key_fields.each do |field| -%>
+        <p><%= f.label field %><br />
+        <%= f.email_field field, autofocus: true, class: 'form-control' %></p>
+      <% end -%>
+
+      <p><%= f.submit t("devise.invitations.new.submit_button"), class: 'btn btn-primary' %></p>
+    <% end %>
+  </div>
+</div>
