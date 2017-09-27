@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Log in', feature: true do
   let(:user) { create(:user) }
-  let(:admin_user) { create(:user, :admin) }
+  let(:admin) { create(:user, :admin) }
 
   before do
     visit new_user_session_path
@@ -40,8 +40,8 @@ describe 'Log in', feature: true do
 
   context 'admin user logging in' do
     before do
-      fill_in('user_email', with: admin_user.email)
-      fill_in('user_password', with: admin_user.password)
+      fill_in('user_email', with: admin.email)
+      fill_in('user_password', with: admin.password)
       click_button('Log in')
     end
 

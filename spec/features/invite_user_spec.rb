@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Invite user', feature: true do
   let(:user) { create(:user) }
-  let(:admin_user) { create(:user, :admin) }
+  let(:admin) { create(:user, :admin) }
 
   context 'unauthenticated user' do
     before do
@@ -31,8 +31,8 @@ describe 'Invite user', feature: true do
   context 'authenticated admin' do
     before do
       visit new_user_session_path
-      fill_in('user_email', with: admin_user.email)
-      fill_in('user_password', with: admin_user.password)
+      fill_in('user_email', with: admin.email)
+      fill_in('user_password', with: admin.password)
       click_button('Log in')
       click_link('Invite User')
     end
