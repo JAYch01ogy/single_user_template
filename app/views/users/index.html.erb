@@ -3,6 +3,6 @@
 
 <ul class='users'>
   <% @users.each do |user| %>
-    <li><%= user.email %><br/></li>
+    <li><%= link_to user.email, user %><br/></li>
   <% end %>
 </ul>
