@@ -35,13 +35,13 @@ Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, {})
 end
 
-if ENV['HEADLESS']
-  Capybara.javascript_driver = :poltergeist
-else
-  Capybara.current_driver = :selenium
-end
+Capybara.default_driver = :selenium
+
+Capybara.javascript_driver = :poltergeist if ENV['HEADLESS']
 
 RSpec.configure do |config|
+  config.include(Shoulda::Matchers::ActiveModel, type: :model)
+  config.include(Shoulda::Matchers::ActiveRecord, type: :model)
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

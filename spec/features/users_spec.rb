@@ -1,17 +1,17 @@
 require 'rails_helper'
 
-describe 'Invite user', feature: true do
+describe 'Users page', feature: true do
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
   let(:email) { 'random@test.com' }
 
   context 'unauthenticated user' do
     before do
-      visit new_user_invitation_path
+      visit users_path
     end
 
-    it 'asks them to sign in' do
-      expect(page).to have_content('You need to sign in or sign up before continuing.')
+    it 'displays admin only message' do
+      expect(page).to have_content('Admins only!')
     end
   end
 
@@ -21,7 +21,7 @@ describe 'Invite user', feature: true do
       fill_in('user_email', with: user.email)
       fill_in('user_password', with: user.password)
       click_button('Log in')
-      visit new_user_invitation_path
+      visit users_path
     end
 
     it 'displays admin only message' do
@@ -31,26 +31,24 @@ describe 'Invite user', feature: true do
 
   context 'authenticated admin' do
     before do
+      create_list(:user, 3)
       visit new_user_session_path
       fill_in('user_email', with: admin.email)
       fill_in('user_password', with: admin.password)
       click_button('Log in')
-      click_link('Invite User')
+      click_link('Users')
     end
 
     it 'displays the page' do
-      expect(page).to have_content('Invite User')
-      expect(page).to have_css('#user_email')
-      expect(page).to have_selector("input[type=submit][value='Send an invitation']")
+      User.all.each do |user|
+        expect(page).to have_content(user.email)
+        expect(page).to have_content(user.name)
+      end
     end
 
-    it 'creates a user' do
-      user_count = User.count
-      fill_in('user_email', with: email)
-      fill_in('user_name', with: 'random')
-      click_button('Send an invitation')
-      expect(page).to have_content("An invitation email has been sent to #{email}")
-      expect(User.count).to eql(user_count + 1)
+    it 'displays selected user' do
+      click_link(User.first.email)
+      expect(page).to have_content(User.first.email)
     end
   end
 end

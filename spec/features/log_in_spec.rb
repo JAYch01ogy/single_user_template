@@ -51,12 +51,15 @@ describe 'Log in', feature: true do
       expect(page).to have_content('Logout')
       expect(page).not_to have_content('Login')
       expect(page).to have_content('Invite User')
+      expect(page).to have_content('Users')
     end
 
     it 'allows logging out' do
       click_link('Logout')
       expect(page).to have_content('Signed out successfully.')
       expect(page).not_to have_content('Logout')
+      expect(page).not_to have_content('Invite User')
+      expect(page).not_to have_content('Users')
       expect(page).to have_content('Login')
     end
   end

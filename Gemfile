@@ -19,16 +19,20 @@ gem 'bootstrap-sass', '3.3.7'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'capybara', '~> 2.13'
-  gem 'selenium-webdriver'
-  gem 'poltergeist'
   gem 'faker'
   gem 'rubocop', require: false
   gem 'rubocop-checkstyle_formatter', require: false
   gem 'rubocop-rspec'
-  gem 'rspec-rails'
   gem 'factory_girl_rails'
+end
+
+group :test do
+  gem 'capybara', '~> 2.13'
+  gem 'selenium-webdriver'
+  gem 'poltergeist'
   gem 'rails-controller-testing'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
 end
 
 group :development do
