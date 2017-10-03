@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Invite user', feature: true do
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
+  let(:email) { 'random@test.com' }
 
   context 'unauthenticated user' do
     before do
@@ -45,9 +46,10 @@ describe 'Invite user', feature: true do
 
     it 'creates a user' do
       user_count = User.count
-      fill_in('user_email', with: 'some@email.com')
+      fill_in('user_email', with: email)
+      fill_in('user_name', with: 'random')
       click_button('Send an invitation')
-      expect(page).to have_content('An invitation email has been sent to some@email.com.')
+      expect(page).to have_content("An invitation email has been sent to #{email}")
       expect(User.count).to eql(user_count + 1)
     end
   end

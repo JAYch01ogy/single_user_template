@@ -3,6 +3,8 @@ require 'rails_helper'
 describe 'Invite user', type: :request do
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
+  let(:email) { 'random@test.com' }
+  let(:name) { 'random' }
 
   context 'GET #new' do
     it 'redirects unauthenticated to log in' do
@@ -48,7 +50,7 @@ describe 'Invite user', type: :request do
       post user_session_path, params: { user: { email: user.email, password: user.password } }
       expect(response).to redirect_to(:root)
       follow_redirect!
-      post '/users/invitation', params: { user: { email: 'random@test.com' } }
+      post '/users/invitation', params: { user: { email: email, name: name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
@@ -60,7 +62,7 @@ describe 'Invite user', type: :request do
       post user_session_path, params: { user: { email: admin.email, password: admin.password } }
       expect(response).to redirect_to(:root)
       follow_redirect!
-      post '/users/invitation', params: { user: { email: 'random@test.com' } }
+      post '/users/invitation', params: { user: { email: email, name: name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
