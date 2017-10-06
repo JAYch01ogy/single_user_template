@@ -41,4 +41,18 @@ describe 'Users', type: :request do
     expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)
   end
+
+  it 'prevents unathenticated users from deleting a user' do
+    delete "/users/#{user_being_deleted.id}"
+    expect(response.status).to eql(302)
+    expect(response).to redirect_to(:root)
+    expect(User.count).to eql(prior_user_count)
+  end
+
+  it 'prevents unathenticated users from deleting an admin user' do
+    delete "/users/#{admin.id}"
+    expect(response.status).to eql(302)
+    expect(response).to redirect_to(:root)
+    expect(User.count).to eql(prior_user_count)
+  end
 end
