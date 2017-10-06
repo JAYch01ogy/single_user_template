@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
   root 'static_pages#home'
   devise_for :users, :controllers => { :invitations => 'users/invitations' }
-  resources :users, :only => [:index, :show]
+  resources :users, :only => [:index, :show, :destroy]
 end

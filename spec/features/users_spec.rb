@@ -50,5 +50,31 @@ describe 'Users page', feature: true do
       click_link(User.first.email)
       expect(page).to have_content(User.first.email)
     end
+
+    context 'delete users' do
+      let!(:prior_user_count) { User.count }
+      let!(:user_being_deleted) { User.find(2) }
+
+      it 'allows user deletion of non admin user' do
+        find('#user_2').click_link('Delete')
+        page.driver.browser.switch_to.alert.accept
+        expect(page).to have_content('Successfully deleted user.')
+        expect(User.count).to eql(prior_user_count - 1)
+        expect(page).not_to have_content(user_being_deleted.email)
+
+        User.all.each do |user|
+          expect(page).to have_content(user.email)
+          expect(page).to have_content(user.name)
+        end
+      end
+
+      it 'prevents deletion of admin user' do
+        find("#user_#{admin.id}").click_link('Delete')
+        page.driver.browser.switch_to.alert.accept
+        expect(page).to have_content('You cannot delete the admin user.')
+        expect(User.count).to eql(prior_user_count)
+        expect(page).to have_content(admin.email)
+      end
+    end
   end
 end
