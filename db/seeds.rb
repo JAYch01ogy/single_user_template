@@ -8,3 +8,7 @@
 
 User.create(email: 'admin@test.com', password: 'Testing1', admin: true, name: 'Admin User')
 User.create(email: 'test@test.com', password: 'Testing1', admin: false, name: 'Test User')
+
+for i in 1..5 do
+  User.create(email: "test#{i}@test.com", password: 'Testing1', admin: false, name: 'Test User')
+end
