@@ -69,5 +69,18 @@ describe 'Invite user', type: :request do
       expect(response).to render_template(:home)
       expect(User.count).to eql(2)
     end
+
+    it 'does not allow creation of admin users' do
+      post user_session_path, params: { user: { email: admin.email, password: admin.password, admin: true } }
+      expect(response).to redirect_to(:root)
+      follow_redirect!
+      post '/users/invitation', params: { user: { email: email, name: name } }
+      expect(response.status).to eql(302)
+      expect(response).to redirect_to(:root)
+      follow_redirect!
+      expect(response).to render_template(:home)
+      expect(User.count).to eql(2)
+      expect(User.last.admin).to be(false)
+    end
   end
 end
