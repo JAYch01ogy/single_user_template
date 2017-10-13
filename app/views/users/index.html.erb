@@ -13,7 +13,11 @@
       <tbody>
         <% @users.each do |user| %>
           <tr id="user_<%= user.id %>">
-            <td><%= link_to user.email, user %></td>
+            <% if user.admin %>
+              <td><%= link_to "#{user.email} (admin)", user %></td>
+            <% else %>
+              <td><%= link_to user.email, user %></td>
+            <% end %>
             <td><%= user.name %></td>
             <td><%= link_to 'Edit', edit_user_path(user) %></td>
             <td><%= link_to 'Delete', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
