@@ -5,6 +5,8 @@ describe 'Invite user', type: :request do
   let(:admin) { create(:user, :admin) }
   let(:email) { 'random@test.com' }
   let(:name) { 'random' }
+  let(:random_email) { Faker::Internet.email }
+  let(:random_name) { Faker::Name.first_name }
 
   context 'GET #new' do
     it 'redirects unauthenticated to log in' do
@@ -38,7 +40,7 @@ describe 'Invite user', type: :request do
 
   context 'POST #create' do
     it 'redirects unauthenticated user invite to log in' do
-      post '/users/invitation', params: { user: { email: 'random@test.com' } }
+      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:new_user_session)
       follow_redirect!
@@ -50,7 +52,7 @@ describe 'Invite user', type: :request do
       post user_session_path, params: { user: { email: user.email, password: user.password } }
       expect(response).to redirect_to(:root)
       follow_redirect!
-      post '/users/invitation', params: { user: { email: email, name: name } }
+      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
@@ -62,7 +64,7 @@ describe 'Invite user', type: :request do
       post user_session_path, params: { user: { email: admin.email, password: admin.password } }
       expect(response).to redirect_to(:root)
       follow_redirect!
-      post '/users/invitation', params: { user: { email: email, name: name } }
+      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
@@ -74,7 +76,7 @@ describe 'Invite user', type: :request do
       post user_session_path, params: { user: { email: admin.email, password: admin.password, admin: true } }
       expect(response).to redirect_to(:root)
       follow_redirect!
-      post '/users/invitation', params: { user: { email: email, name: name } }
+      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
