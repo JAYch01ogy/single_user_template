@@ -17,10 +17,7 @@ describe 'Users page', feature: true do
 
   context 'non admin user' do
     before do
-      visit new_user_session_path
-      fill_in('user_email', with: user.email)
-      fill_in('user_password', with: user.password)
-      click_button('Log in')
+      log_in(user)
       visit users_path
     end
 
@@ -32,10 +29,7 @@ describe 'Users page', feature: true do
   context 'authenticated admin' do
     before do
       create_list(:user, 3)
-      visit new_user_session_path
-      fill_in('user_email', with: admin.email)
-      fill_in('user_password', with: admin.password)
-      click_button('Log in')
+      log_in(admin)
       click_link('Users')
     end
 
@@ -46,9 +40,18 @@ describe 'Users page', feature: true do
       end
     end
 
-    it 'displays selected user' do
+    it 'displays admin profile' do
+      click_link(admin.email)
+      expect(page).to have_content('Profile (admin)')
+      expect(find('#user_email')).to have_content(admin.email)
+      expect(find('#user_name')).to have_content(admin.name)
+    end
+
+    it 'displays selected user profile' do
       click_link(User.first.email)
-      expect(page).to have_content(User.first.email)
+      expect(page).to have_content('Profile')
+      expect(find('#user_email')).to have_content(User.first.email)
+      expect(find('#user_name')).to have_content(User.first.name)
     end
 
     context 'delete users' do
