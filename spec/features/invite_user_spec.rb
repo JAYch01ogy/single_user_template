@@ -17,10 +17,7 @@ describe 'Invite user', feature: true do
 
   context 'non admin user' do
     before do
-      visit new_user_session_path
-      fill_in('user_email', with: user.email)
-      fill_in('user_password', with: user.password)
-      click_button('Log in')
+      log_in(user)
       visit new_user_invitation_path
     end
 
@@ -31,10 +28,7 @@ describe 'Invite user', feature: true do
 
   context 'authenticated admin' do
     before do
-      visit new_user_session_path
-      fill_in('user_email', with: admin.email)
-      fill_in('user_password', with: admin.password)
-      click_button('Log in')
+      log_in(admin)
       click_link('Invite User')
     end
 
