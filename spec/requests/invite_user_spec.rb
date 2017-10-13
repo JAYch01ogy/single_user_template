@@ -3,8 +3,6 @@ require 'rails_helper'
 describe 'Invite user', type: :request do
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
-  let(:email) { 'random@test.com' }
-  let(:name) { 'random' }
   let(:random_email) { Faker::Internet.email }
   let(:random_name) { Faker::Name.first_name }
 
@@ -18,9 +16,7 @@ describe 'Invite user', type: :request do
     end
 
     it 'redirects non admin user to home' do
-      post user_session_path, params: { user: { email: user.email, password: user.password } }
-      expect(response).to redirect_to(:root)
-      follow_redirect!
+      request_log_in(user)
       get new_user_invitation_path
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
@@ -29,9 +25,7 @@ describe 'Invite user', type: :request do
     end
 
     it 'renders new_user_invitation_path for admin' do
-      post user_session_path, params: { user: { email: admin.email, password: admin.password } }
-      expect(response).to redirect_to(:root)
-      follow_redirect!
+      request_log_in(admin)
       get new_user_invitation_path
       expect(response.status).to eql(200)
       expect(response).to render_template(:new)
@@ -40,7 +34,7 @@ describe 'Invite user', type: :request do
 
   context 'POST #create' do
     it 'redirects unauthenticated user invite to log in' do
-      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
+      post user_invitation_path, params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:new_user_session)
       follow_redirect!
@@ -49,10 +43,8 @@ describe 'Invite user', type: :request do
     end
 
     it 'redirects non admin user to home' do
-      post user_session_path, params: { user: { email: user.email, password: user.password } }
-      expect(response).to redirect_to(:root)
-      follow_redirect!
-      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
+      request_log_in(user)
+      post user_invitation_path, params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
@@ -61,10 +53,8 @@ describe 'Invite user', type: :request do
     end
 
     it 'redirects admin user to home and creates a user' do
-      post user_session_path, params: { user: { email: admin.email, password: admin.password } }
-      expect(response).to redirect_to(:root)
-      follow_redirect!
-      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
+      request_log_in(admin)
+      post user_invitation_path, params: { user: { email: random_email, name: random_name } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!
@@ -73,10 +63,8 @@ describe 'Invite user', type: :request do
     end
 
     it 'does not allow creation of admin users' do
-      post user_session_path, params: { user: { email: admin.email, password: admin.password, admin: true } }
-      expect(response).to redirect_to(:root)
-      follow_redirect!
-      post '/users/invitation', params: { user: { email: random_email, name: random_name } }
+      request_log_in(admin)
+      post user_invitation_path, params: { user: { email: random_email, name: random_name, admin: true } }
       expect(response.status).to eql(302)
       expect(response).to redirect_to(:root)
       follow_redirect!

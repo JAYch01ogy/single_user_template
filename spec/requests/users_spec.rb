@@ -9,7 +9,7 @@ describe 'Users', type: :request do
   it 'allows admin to delete a user' do
     post user_session_path, params: { user: { email: admin.email, password: admin.password } }
     follow_redirect!
-    delete "/users/#{user_being_deleted.id}"
+    delete user_path(user_being_deleted.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:users)
     expect(User.count).to eql(prior_user_count - 1)
@@ -18,16 +18,25 @@ describe 'Users', type: :request do
   it 'prevents admin from deleting an admin user' do
     post user_session_path, params: { user: { email: admin.email, password: admin.password } }
     follow_redirect!
-    delete "/users/#{admin.id}"
+    delete user_path(admin.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:users)
+    expect(User.count).to eql(prior_user_count)
+  end
+
+  it 'prevents non admin user from deleting themselves' do
+    post user_session_path, params: { user: { email: user.email, password: user.password } }
+    follow_redirect!
+    delete user_path(user.id)
+    expect(response.status).to eql(302)
+    expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)
   end
 
   it 'prevents non admin user from deleting a user' do
     post user_session_path, params: { user: { email: user.email, password: user.password } }
     follow_redirect!
-    delete "/users/#{user_being_deleted.id}"
+    delete user_path(user_being_deleted.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)
@@ -36,21 +45,21 @@ describe 'Users', type: :request do
   it 'prevents non admin user from deleting an admin user' do
     post user_session_path, params: { user: { email: user.email, password: user.password } }
     follow_redirect!
-    delete "/users/#{admin.id}"
+    delete user_path(admin.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)
   end
 
   it 'prevents unathenticated users from deleting a user' do
-    delete "/users/#{user_being_deleted.id}"
+    delete user_path(user_being_deleted.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)
   end
 
   it 'prevents unathenticated users from deleting an admin user' do
-    delete "/users/#{admin.id}"
+    delete user_path(admin.id)
     expect(response.status).to eql(302)
     expect(response).to redirect_to(:root)
     expect(User.count).to eql(prior_user_count)

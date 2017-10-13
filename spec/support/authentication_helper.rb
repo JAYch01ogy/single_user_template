@@ -4,3 +4,8 @@ def log_in(user)
   fill_in('user_password', with: user.password)
   click_button('Log in')
 end
+
+def request_log_in(user)
+  post user_session_path, params: { user: { email: user.email, password: user.password } }
+  follow_redirect!
+end

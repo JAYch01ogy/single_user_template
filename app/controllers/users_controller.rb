@@ -38,15 +38,16 @@ class UsersController < ApplicationController
   end
 
   private
-    def user_params
-      params.require(:user).permit(:email, :name)
-    end
 
-    def correct_user
-      @user = User.find(params[:id])
-      unless @user == current_user || (current_user && current_user.admin?)
-        flash[:error] = 'Access denied.'
-        redirect_to root_path
-      end
+  def user_params
+    params.require(:user).permit(:email, :name)
+  end
+
+  def correct_user
+    @user = User.find(params[:id])
+    unless @user == current_user || (current_user && current_user.admin?)
+      flash[:error] = 'Access denied.'
+      redirect_to root_path
     end
+  end
 end
