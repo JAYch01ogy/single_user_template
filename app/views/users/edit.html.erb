@@ -1,1 +1,18 @@
-<h1>Edit user</h1>
+<% provide(:title, 'Edit User') %>
+<h1>Edit User</h1>
+
+<div class='row'>
+  <div class='col-md-6 col-md-offset-3'>
+    <%= form_for @user, method: :patch do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+
+      <%= f.label :name %><br />
+      <%= f.text_field :name, autocomplete: 'off', class: 'form-control' %>
+
+      <%= f.submit 'Edit user', class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</div>
