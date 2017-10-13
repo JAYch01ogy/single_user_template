@@ -1,2 +1,12 @@
-<h1><%= @user.email %></h1>
-<h1><%= @user.name %></h1>
+<% provide(:title, current_user.email) %>
+<h1>Profile</h1>
+
+<div class='row'>
+  <div class='col-md-6 col-md-offset-3'>
+    <ul class="list-group">
+      <li class="list-group-item"><b>Email:</b> <%= @user.email %></li>
+      <li class="list-group-item"><b>Name:</b> <%= @user.name %></li>
+      <li class="list-group-item"><%= link_to 'Edit', edit_user_path(current_user) %></li>
+    </ul>
+  </div>
+</div>
