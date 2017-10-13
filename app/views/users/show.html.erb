@@ -10,7 +10,7 @@
     <ul class='list-group'>
       <li class='list-group-item' id='user_email'><b>Email:</b> <%= @user.email %></li>
       <li class='list-group-item' id='user_name'><b>Name:</b> <%= @user.name %></li>
-      <li class='list-group-item'><%= link_to 'Edit', edit_user_path(current_user) %></li>
+      <li class='list-group-item'><%= link_to 'Edit', edit_user_path(@user) %></li>
     </ul>
   </div>
 </div>
