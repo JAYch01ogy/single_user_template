@@ -15,9 +15,9 @@ describe 'Password reset', feature: true do
     fill_in('user_email', with: user.email)
     click_button('Send me reset password instructions')
     expect(page).to have_content('You will receive an email with instructions on how to reset your password in a few minutes.')
-    message = ActionMailer::Base.deliveries[0].to_s
-    rpt_index = message.index('reset_password_token') + 'reset_password_token'.length + 1
-    reset_password_token = message[rpt_index...message.index("\"", rpt_index)]
+    message = ActionMailer::Base.deliveries.last.to_s
+    reset_password_token_index = message.index('reset_password_token') + 'reset_password_token'.length + 1
+    reset_password_token = message[reset_password_token_index...message.index("\"", reset_password_token_index)]
     visit "users/password/edit?reset_password_token=#{reset_password_token}"
     fill_in('user_password', with: new_password)
     fill_in('user_password_confirmation', with: new_password)
