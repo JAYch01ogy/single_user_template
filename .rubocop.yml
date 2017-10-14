@@ -1,0 +1,8 @@
+AllCops:
+  DisplayCopNames: true
+Metrics/BlockLength:
+  Enabled: false
+Metrics/LineLength:
+  Max: 100
+Performance/FixedSize:
+  Enabled: false
