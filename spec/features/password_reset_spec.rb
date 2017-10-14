@@ -24,5 +24,8 @@ describe 'Password reset', feature: true do
     click_button('Change my password')
     expect(page).to have_content('Your password has been changed successfully. You are now signed in.')
     expect(user.reload.encrypted_password).not_to eql(old_password)
+    click_link('Profile')
+    expect(find('#user_email')).to have_content(user.email)
+    expect(find('#user_name')).to have_content(user.name)
   end
 end

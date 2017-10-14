@@ -3,7 +3,8 @@ require 'rails_helper'
 describe 'Invite user', feature: true do
   let(:user) { create(:user) }
   let(:admin) { create(:user, :admin) }
-  let(:email) { 'random@test.com' }
+  let(:random_email) { Faker::Internet.email }
+  let(:random_name) { Faker::Name.first_name }
 
   context 'unauthenticated user' do
     before do
@@ -38,13 +39,36 @@ describe 'Invite user', feature: true do
       expect(page).to have_selector("input[type=submit][value='Send an invitation']")
     end
 
-    it 'creates a user' do
-      user_count = User.count
-      fill_in('user_email', with: email)
-      fill_in('user_name', with: 'random')
-      click_button('Send an invitation')
-      expect(page).to have_content("An invitation email has been sent to #{email}")
-      expect(User.count).to eql(user_count + 1)
+    context 'invites a user' do
+      let!(:original_user_count) { User.count }
+      let(:password) { 'Testing1' }
+
+      before do
+        fill_in('user_email', with: random_email)
+        fill_in('user_name', with: random_name)
+        click_button('Send an invitation')
+      end
+
+      it 'creates a user' do
+        expect(page).to have_content("An invitation email has been sent to #{random_email}")
+        expect(User.count).to eql(original_user_count + 1)
+      end
+
+      it 'allows user to join' do
+        click_link('Logout')
+        message = ActionMailer::Base.deliveries.last.to_s
+        invitation_token_index = message.index('invitation_token') + 'invitation_token'.length + 1
+        invitation_token = message[invitation_token_index...message.index("\r", invitation_token_index)]
+        visit "users/invitation/accept?invitation_token=#{invitation_token}"
+        expect(page).to have_content('Set your password')
+        fill_in('user_password', with: password)
+        fill_in('user_password_confirmation', with: password)
+        click_button('Set my password')
+        expect(page).to have_content('Your password was set successfully. You are now signed in.')
+        click_link('Profile')
+        expect(find('#user_email')).to have_content(random_email)
+        expect(find('#user_name')).to have_content(random_name)
+      end
     end
   end
 end
